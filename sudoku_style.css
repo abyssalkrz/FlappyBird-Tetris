@@ -1,0 +1,156 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Georgia, serif;
+    background-color: #f5f0e8;
+    color: #2c2c2c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 16px;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    color: #3a3a5c;
+}
+
+/* --- Controls bar --- */
+#controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+select,
+button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #b0a898;
+    cursor: pointer;
+    background-color: #fff;
+    color: #2c2c2c;
+}
+
+button {
+    background-color: #3a3a5c;
+    color: #fff;
+    border-color: #3a3a5c;
+}
+
+button:hover {
+    background-color: #52527a;
+}
+
+#timer {
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+    color: #3a3a5c;
+    min-width: 48px;
+    text-align: right;
+}
+
+/* --- The 9x9 board --- */
+#board {
+    display: grid;
+    grid-template-columns: repeat(9, 52px);
+    grid-template-rows: repeat(9, 52px);
+    border: 3px solid #2c2c2c;
+    margin-bottom: 16px;
+    gap: 0;
+}
+
+.cell {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    border: 1px solid #b0a898;
+    cursor: pointer;
+    user-select: none;
+    background-color: #faf7f2;
+    position: relative;
+}
+
+/* Border cho 3x3 boxes - dùng nth-child formula */
+.cell {
+    border-right: 1px solid #b0a898;
+    border-bottom: 1px solid #b0a898;
+}
+
+/* Cột thứ 3, 6 -> border dày */
+.cell:nth-child(3n) {
+    border-right: 3px solid #2c2c2c;
+}
+
+/* Hàng thứ 3, 6 -> border dày */
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 3px solid #2c2c2c;
+}
+
+/* Cột đầu tiên không có border trái */
+.cell:nth-child(9n+1) {
+    border-left: none;
+}
+
+/* Hàng đầu tiên không có border trên */
+.cell:nth-child(-n+9) {
+    border-top: none;
+}
+
+/* Given (pre-filled) numbers */
+.cell.given {
+    color: #2c2c2c;
+    font-weight: bold;
+    cursor: default;
+    background-color: #e8e3d8;
+}
+
+/* User-entered numbers */
+.cell.user {
+    color: #3a3a5c;
+}
+
+/* Selected cell */
+.cell.selected {
+    background-color: #d6e4f7;
+}
+
+/* Highlighted (same number) */
+.cell.highlight {
+    background-color: #e8dfc8;
+}
+
+/* Error cell */
+.cell.error {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+/* --- Action buttons --- */
+#actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* --- Win/message banner --- */
+#message {
+    font-size: 1.2rem;
+    color: #2a7a2a;
+    font-weight: bold;
+    min-height: 1.5rem;
+}
