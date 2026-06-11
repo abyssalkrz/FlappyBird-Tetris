@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Game Giải Trí</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mhoangg's Game</h1>
+        
+        <!-- Thanh chọn trò chơi -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchGame('tetris')">Tetris</button>
+            <button class="tab-btn" onclick="switchGame('flappy')">Flappy Bird</button>
+        </div>
+
+        <!-- Khu vực chơi Tetris -->
+        <div id="tetris-area" class="game-area">
+            <div class="game-wrapper">
+                <canvas id="tetris-canvas" width="240" height="400"></canvas>
+                <div class="game-info">
+                    <h2>TETRIS</h2>
+                    <div class="score-board">
+                        <p>Điểm: <span id="tetris-score" class="score-val">0</span></p>
+                        <p>Kỷ lục: <span id="tetris-high" class="score-val high">0</span></p>
+                    </div>
+                    <button id="tetris-play-btn" class="control-btn" onclick="startTetris()">Chơi mới</button>
+                    <div class="instructions">
+                        <p><strong>Cách chơi:</strong></p>
+                        <p>← → : Di chuyển</p>
+                        <p>↑ : Xoay khối</p>
+                        <p>↓ : Rơi nhanh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Khu vực chơi Flappy Bird -->
+        <div id="flappy-area" class="game-area hidden">
+            <div class="game-wrapper">
+                <canvas id="flappy-canvas" width="320" height="480"></canvas>
+                
+                <!-- Giao diện đè lên canvas của Flappy Bird -->
+                <div id="flappy-ui-overlay" class="overlay-container">
+                    
+                    <!-- Màn hình chính (Home) -->
+                    <div id="flappy-menu-screen" class="ui-screen">
+                        <div class="coin-display">
+                            <img src="coin.jpg" alt="coin" class="coin-icon">
+                            <span id="flappy-coin-count">0</span>
+                        </div>
+                        <h2 class="game-title text-accent">BIRD DTRUNG</h2>
+                        <div class="menu-buttons">
+                            <button class="menu-btn primary-btn" onclick="handleMenuClick('play')">Chơi ngay</button>
+                            <button class="menu-btn" onclick="handleMenuClick('characters')">Nhân vật</button>
+                            <button class="menu-btn" onclick="handleMenuClick('shop')">Vòng quay Shop</button>
+                        </div>
+                    </div>
+
+                    <!-- Màn hình chọn nhân vật -->
+                    <div id="flappy-char-screen" class="ui-screen hidden">
+                        <button class="back-btn" onclick="showScreen('menu')">← Quay lại</button>
+                        <h3>CHỌN NHÂN VẬT</h3>
+                        <div class="char-grid">
+                            <!-- JS tự động tạo các ô nhân vật tại đây -->
+                        </div>
+                    </div>
+
+                    <!-- Màn hình Shop (Vòng quay) -->
+                    <div id="flappy-shop-screen" class="ui-screen hidden">
+                        <button class="back-btn" onclick="showScreen('menu')">← Quay lại</button>
+                        <h3>VÒNG QUAY MAY MẮN</h3>
+                        <div class="shop-coin-display">
+                            <img src="coin.jpg" alt="coin" class="coin-icon">
+                            <span id="shop-coin-count">0</span> Xu
+                        </div>
+                        
+                        <div class="wheel-container">
+                            <div class="wheel-pointer">▼</div>
+                            <div class="spin-wheel">
+                                <div class="wheel-inner" id="wheel-inner">
+                                    <!-- JS tự động vẽ các phân vùng tại đây -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="spin-btn" class="spin-btn" onclick="spinGacha()">QUAY (25 Xu)</button>
+                        <p id="spin-status" class="spin-status"></p>
+                    </div>
+
+                    <!-- Bảng điểm khi thua (Scoreboard retro) -->
+                    <div id="flappy-gameover-screen" class="ui-screen hidden">
+                        <h2 class="retro-gameover-title">GAME OVER</h2>
+                        
+                        <div class="retro-scoreboard">
+                            <div class="medal-section">
+                                <span class="board-label">MEDAL</span>
+                                <div class="medal-slot">
+                                    <img id="medal-img" src="coin.jpg" alt="medal">
+                                </div>
+                            </div>
+                            <div class="score-section">
+                                <span class="board-label">SCORE</span>
+                                <span id="board-score" class="board-value">0</span>
+                                
+                                <span class="board-label">BEST</span>
+                                <div class="best-container">
+                                    <span id="board-new-tag" class="new-tag hidden">NEW</span>
+                                    <span id="board-best" class="board-value">0</span>
+                                </div>
+                                
+                                <span class="board-label">COINS EARNED</span>
+                                <span id="board-coins-earned" class="board-value-coins">+0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="retro-buttons">
+                            <button class="retro-btn play-btn" onclick="startFlappy()" title="Chơi lại">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+                                <span>Chơi lại</span>
+                            </button>
+                            <button class="retro-btn home-btn" onclick="initFlappy()" title="Trang chủ">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#fff"/></svg>
+                                <span>Trang chủ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="game-info">
+                <h2>BIRD DTRUNG</h2>
+                <div class="score-board">
+                    <p>Điểm: <span id="flappy-score" class="score-val">0</span></p>
+                    <p>Kỷ lục: <span id="flappy-high" class="score-val high">0</span></p>
+                    <p>Xu hiện tại: <span id="flappy-sidebar-coins" class="score-val" style="color: #ffcc00;">0</span></p>
+                </div>
+                <div class="instructions">
+                    <p><strong>Cách chơi:</strong></p>
+                    <p>Phím Space hoặc Click chuột trực tiếp vào màn hình chơi để nhảy lên.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nhúng các file script -->
+    <script src="tetris.js"></script>
+    <script src="flappy.js"></script>
+    <script>
+        // Logic chuyển đổi qua lại giữa các game
+        function switchGame(gameName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.game-area').forEach(area => area.classList.add('hidden'));
+
+            if (gameName === 'tetris') {
+                document.querySelector('[onclick="switchGame(\'tetris\')"]').classList.add('active');
+                document.getElementById('tetris-area').classList.remove('hidden');
+                stopFlappyGame();
+                initTetris();
+            } else {
+                document.querySelector('[onclick="switchGame(\'flappy\')"]').classList.add('active');
+                document.getElementById('flappy-area').classList.remove('hidden');
+                stopTetrisGame();
+                initFlappy();
+            }
+        }
+
+        // Ngăn trang web tự động cuộn lên xuống khi nhấn phím mũi tên hoặc Space
+        window.addEventListener('keydown', function(e) {
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+
+        // Khởi chạy game đầu tiên khi tải trang
+        window.onload = () => {
+            initTetris();
+        };
+    </script>
+</body>
+</html>
